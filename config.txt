@@ -1,0 +1,62 @@
+#####   Galloping_murderers config.txt     #####
+################################################
+###
+### /gmr join command
+###
+################################################
+guest:/gmr [$gmrchoice=''] = >>>
+	@gmr = $gmrchoice
+	@player = player()
+	###If no choice is selected from /purge command
+	if(equals(@gmr, '')) {
+		die(color(4).'You need to specify an option, /gmr join')
+		}
+	###
+	### If "join" command is triggered
+	###
+		if(equals(@gmr, 'join')) {
+			@joinstatus = import('status.join')
+				if(@joinstatus == 'on') {
+					@parray = import('player.list')
+				if(array_contains(@parray, @player)) {
+					die(color(4)'Error: You are already on the Waiting list!')
+				}
+			_addtolist(@player)
+				}
+				if(@joinstatus == 'ingame') {
+					if(array_contains(@parray, @player)) {
+						die(color(4)'Error: You are already InGame!')
+					}  
+					@pfarray = import('pfarray.list')
+					if(array_size(@pfarray) > 19) {
+						@freenum = import('free.num')
+							if(array_size(@freenum) > 0) {
+								@number = array_index(@freenum, 0)
+								_addtogame(@player, @number)
+								die()
+							}
+						die(color(4).'All horses are currently busy. Wait for the end of the race or someone to leave.')
+					}
+					@number = import('nextnumber')
+					_addtogame(@player, @number)
+				}			
+		}
+	###
+	### If "leave" command is triggered
+	###
+		if(equals(@gmr, 'leave')) {
+			@parray = import('player.list')
+				if(!array_contains(@parray, @player)) {
+					die(color(4).'Error: You need to be ingame to use this command')
+				}
+			_remove_player(@player)
+			_emptyinv(@player)
+				@joinstatus = import('status.join')
+				set_ploc(@player, import('ident.gmr.spawn'))
+					if(@joinstatus == 'ingame') {
+						if(array_size(@parray == 1)) {
+							_endrace()
+							die()
+						}
+					}
+		}
