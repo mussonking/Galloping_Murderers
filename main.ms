@@ -28,7 +28,7 @@ bind(player_quit, null, null, @event,
 		die()
 		}
 	if(array_contains(@playerlist, @quitname)) {
-		_remove_purger(@quitname)
+		_remove_player(@quitname)
 		die()		
 	}
 	)
@@ -66,6 +66,8 @@ bind(player_spawn, null, null, @playerspawnevent,
 		if(@location == null) {
 			@cords = _startcord(@pnum)
 			modify_event('location', @cords)
+			_setpos(@respawnname, @pnum, @cords)
+			die()
 		}
 	modify_event('location', @location)
 	_setpos(@respawnname, @pnum, @location)

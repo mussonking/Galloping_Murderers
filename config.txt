@@ -15,30 +15,37 @@ guest:/gmr [$gmrchoice=''] = >>>
 	### If "join" command is triggered
 	###
 		if(equals(@gmr, 'join')) {
+			@parray = import('player.list')
 			@joinstatus = import('status.join')
 				if(@joinstatus == 'on') {
-					@parray = import('player.list')
-				if(array_contains(@parray, @player)) {
-					die(color(4)'Error: You are already on the Waiting list!')
-				}
-			_addtolist(@player)
+					if(array_contains(@parray, @player)) {
+						die(color(4)'Error: You are already on the Waiting list!')
+					}
+				_addtolist(@player)
 				}
 				if(@joinstatus == 'ingame') {
 					if(array_contains(@parray, @player)) {
 						die(color(4)'Error: You are already InGame!')
 					}  
 					@pfarray = import('pfarray.list')
-					if(array_size(@pfarray) > 19) {
+					if(array_size(@pfarray) > '19') {
 						@freenum = import('free.num')
 							if(array_size(@freenum) > 0) {
-								@number = array_index(@freenum, 0)
+								@number = array_get(@freenum, 0)
+							export('temp.addtogame.player', @player)
+							export('temp.addtogame.number', @number)
 								_addtogame(@player, @number)
+								array_remove_values(@freenum, @number)
 								die()
 							}
 						die(color(4).'All horses are currently busy. Wait for the end of the race or someone to leave.')
 					}
 					@number = import('nextnumber')
+					export('temp.addtogame.player', @player)
+					export('temp.addtogame.number', @number)
 					_addtogame(@player, @number)
+						@number++
+					export('nextnumber', @number)
 				}			
 		}
 	###
@@ -54,34 +61,30 @@ guest:/gmr [$gmrchoice=''] = >>>
 				@joinstatus = import('status.join')
 				set_ploc(@player, import('ident.gmr.spawn'))
 					if(@joinstatus == 'ingame') {
-						if(array_size(@parray == 1)) {
+						if(array_size(@parray) == 0) {
 							_endrace()
 							die()
 						}
 					}
 		}
 		<<<
-	guest:/ride [$id=''] = >>>
-	set_entity_rider($id, pinfo(player(), 13))
-	<<<
-		guest:/tame [$id=''] = >>>
-	tame_mob(player(), $id)
-	<<<
-			guest:/type [$id=''] = >>>
-			set_mob_equipment($id, array(WEAPON: array(type: 329)))
-			set_mob_equipment($id, array(HELMET: array(type: 329)))
-	broadcast(entity_type($id))
-	<<<
-			guest:/rx [$id=''] = >>>
-		@array = array(world: world, x:180, y:67, z:5)
-		broadcast(@array)
-		@value = array_get(@array, z:)
-				broadcast(@value)
-		@value = add(@value, '2')
-				broadcast(@value)
-		array_set(@array, z:, @value)
-	broadcast(@array)
-	<<<	
+
+guest:/tame = >>>
+	@parray = import('player.list')
+		if(!array_contains(@parray, @player)) {
+			die(color(4).'Error: You need to be ingame to use this command')
+		}
+	@player = player()
+	@number = import('info.'.@player)
+	@horses = get_value('horse.list')
+	@horse = array_get(@horses, subtract(@number, '1'))
+		if(get_mob_owner(@horse) == @player) {
+			die(color(4).'Your horse is already Tamed!')
+		}
+	msg(color(2)'Your horse is now tamed!')
+	tame_mob(player(), @horse)
+<<<
+
 	
 	
 

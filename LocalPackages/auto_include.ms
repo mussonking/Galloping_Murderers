@@ -36,101 +36,81 @@ proc(_startcord, @number,
 if(@number == '1') {
 @array = array('189', '67', '-12')
 return(@array)
-export('player.'.@number, @array)
 }
 if(@number == '2') {
 @array = array('189', '67', '-9')
 return(@array)
-export('player.'.@number, @array)
 }
 if(@number == '3') {
 @array = array('189', '67', '-6')
 return(@array)
-export('player.'.@number, @array)
 }
 if(@number == '4') {
 @array = array('189', '67', '-3')
 return(@array)
-export('player.'.@number, @array)
 }
 if(@number == '5') {
 @array = array('189', '67', '0')
 return(@array)
-export('player.'.@number, @array)
 }
 if(@number == '6') {
 @array = array('189', '67', '3')
 return(@array)
-export('player.'.@number, @array)
 }
 if(@number == '7') {
 @array = array('189', '67', '6')
 return(@array)
-export('player.'.@number, @array)
 }
 if(@number == '8') {
 @array = array('189', '67', '9')
 return(@array)
-export('player.'.@number, @array)
 }
 if(@number == '9') {
 @array = array('189', '67', '12')
 return(@array)
-export('player.'.@number, @array)
 }
 if(@number == '10') {
 @array = array('189', '67', '15')
 return(@array)
-export('player.'.@number, @array)
 }
 if(@number == '11') {
 @array = array('189', '67', '18')
 return(@array)
-export('player.'.@number, @array)
 }
 if(@number == '12') {
 @array = array('189', '67', '21')
 return(@array)
-export('player.'.@number, @array)
 }
 if(@number == '13') {
 @array = array('189', '67', '24')
 return(@array)
-export('player.'.@number, @array)
 }
 if(@number == '14') {
 @array = array('189', '67', '27')
 return(@array)
-export('player.'.@number, @array)
 }
 if(@number == '15') {
 @array = array('189', '67', '30')
 return(@array)
-export('player.'.@number, @array)
 }
 if(@number == '16') {
 @array = array('189', '67', '33')
 return(@array)
-export('player.'.@number, @array)
 }
 if(@number == '17') {
 @array = array('189', '67', '36')
 return(@array)
-export('player.'.@number, @array)
 }
 if(@number == '18') {
 @array = array('189', '67', '39')
 return(@array)
-export('player.'.@number, @array)
 }
 if(@number == '19') {
 @array = array('189', '67', '42')
 return(@array)
-export('player.'.@number, @array)
 }
 if(@number == '20') {
 @array = array('189', '67', '45')
 return(@array)
-export('player.'.@number, @array)
 }
 )

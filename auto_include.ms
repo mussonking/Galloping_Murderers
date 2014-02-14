@@ -26,6 +26,10 @@ proc(_emptyinv, @player,
 ###   next game array
 ################################################
 proc(_addtolist, @player,
+	if(import('loadhorsearray') != 'done') {
+		_setrace()
+		export('loadhorsearray', 'done')
+	}
 		@playerarray = import('player.list')
 		@pfarray = import('pfarray.list')
 		array_push(@playerarray, @player)
@@ -43,19 +47,22 @@ proc(_addtolist, @player,
 ###   Procedure that add player to the
 ###   current race
 ################################################
-proc(_addtogame, @player, @number,
-		@number = import('nextnumber')
+proc(_addtogame, @player, @number
+	if(@number == '') {
+		@player = import('temp.addtogame.player')
+		@number = import('temp.addtogame.number')
+	}
+		_give_startitem(@player)
 		_setposstart(@player, @number)
 		export('info.'.@player, @number)
 		@playerarray = import('player.list')
 		@pfarray = import('pfarray.list')
 		array_push(@playerarray, @player)
 		export('player.list', @playerarray)
-			if(!array_contains(@pfarray, @player)) {
+			array_contains(@pfarray, @player) 
 				array_push(@pfarray, @player)
 				export('pfarray.list', @pfarray)
-				_give_startitem(@player)
-			}
+			
 	)
 ################################################
 ### _give_startitem(@player) 
@@ -68,25 +75,29 @@ proc(_give_startitem, @player,
 		set_inventory_item(pinfo(@player, 13), 38, array(type: 307))
 		set_inventory_item(pinfo(@player, 13), 37, array(type: 308))
 		set_inventory_item(pinfo(@player, 13), 36, array(type: 309))
-		set_inventory_item(pinfo(@player, 13), null, array(type: 272))
-		set_inventory_item(pinfo(@player, 13), null, array(type: 329))
-		die()
+		set_inventory_item(pinfo(@player, 13), 2, array(type: 272))
+		set_inventory_item(pinfo(@player, 13), 1, array(type: 329))
+		set_inventory_item(pinfo(@player, 13), 3, array(type: 364, qty: 10))
 	}
-	if(has_permission(@player, 'donator.vip')) {
+	if(has_permission(@player, 'donator.vip') && !has_permission(@player, 'donator.vip+')) {
 		set_inventory_item(pinfo(@player, 13), 39, array(type: 306))
 		set_inventory_item(pinfo(@player, 13), 38, array(type: 303))
 		set_inventory_item(pinfo(@player, 13), 37, array(type: 304))
 		set_inventory_item(pinfo(@player, 13), 36, array(type: 309))
-		set_inventory_item(pinfo(@player, 13), null, array(type: 283))
-		set_inventory_item(pinfo(@player, 13), null, array(type: 329))
-		die()
+		set_inventory_item(pinfo(@player, 13), 2, array(type: 283))
+		set_inventory_item(pinfo(@player, 13), 1, array(type: 329))
+		set_inventory_item(pinfo(@player, 13), 3, array(type: 364, qty: 10))
 	}
+	if(!has_permission(@player, 'donator.vip') && !has_permission(@player, 'donator.vip+')) {
 		set_inventory_item(pinfo(@player, 13), 39, array(type: 302))
 		set_inventory_item(pinfo(@player, 13), 38, array(type: 303))
 		set_inventory_item(pinfo(@player, 13), 37, array(type: 304))
 		set_inventory_item(pinfo(@player, 13), 36, array(type: 305))
-		set_inventory_item(pinfo(@player, 13), null, array(type: 268))
-		set_inventory_item(pinfo(@player, 13), null, array(type: 329))
+		set_inventory_item(pinfo(@player, 13), 2, array(type: 268))
+		set_inventory_item(pinfo(@player, 13), 1, array(type: 329))
+		set_inventory_item(pinfo(@player, 13), 3, array(type: 364, qty: 10))
+		
+		}
 	)
 
 ################################################
@@ -114,7 +125,7 @@ proc(_startgame,
 				export('info.'.@name, @i)
 				_give_startitem(@name)
 				}
-				export('nextnumber', @i)
+				export('nextnumber', add(@i, '1'))
 			foreach(@parray, @name) {
 			@num = import('info.'.@name)
 			_setposstart(@name, @num)
@@ -129,10 +140,16 @@ proc(_startgame,
 ###   and the player, at start of race
 ################################################
 proc(_setposstart, @player, @number,
-@horses = get_value('horse.list')
-@horse = array_get(@horses, subtract(@number, '1'))
-tame_mob(@player, @horse)
-set_entity_rider(@horse, pinfo(@player, 13))
+#@horses = get_value('horse.list')
+#@horse = array_get(@horses, subtract(@number, '1'))
+#tame_mob(@player, @horse)
+	if(@number == '') {
+		@player = import('temp.addtogame.player')
+		@number = import('temp.addtogame.number')
+	}
+@cords = _startcord(@number)
+set_ploc(@player, @cords)
+tmsg(@player, color(4).'ATTENTION'color(5)'Type:'.color(4)'/tame'.color(5)'To tame your horse!')
 )
 ################################################
 ### _setpos(@name, @number) 
@@ -165,10 +182,13 @@ proc(_remove_player, @removename,
 			@allnum = import('free.num')
 			array_push(@allnum, @freenum)
 			export('free.num', @allnum)
+			export('info.'.@removename, '')
 			@horses = get_value('horse.list')
 			@id = array_get(@horses, subtract(@freenum, '1'))
-			@cords = _startcord(subtract(@freenum, '1'))
-			set_entity_loc(@id, @cords)
+			@cords = _startcord(@freenum)
+				set_timeout(2000, closure(
+					set_entity_loc(@id, @cords)
+				))
 		}
 	)
 
