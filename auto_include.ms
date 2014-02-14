@@ -35,7 +35,7 @@ proc(_addtolist, @player,
 				export('pfarray.list', @pfarray)
 			}
 		tmsg(@player, color(2).'You have been added to the waiting list.')
-		_give_startitem(@player)
+	
 	)
 	
 ################################################
@@ -69,6 +69,7 @@ proc(_give_startitem, @player,
 		set_inventory_item(pinfo(@player, 13), 37, array(type: 308))
 		set_inventory_item(pinfo(@player, 13), 36, array(type: 309))
 		set_inventory_item(pinfo(@player, 13), null, array(type: 272))
+		set_inventory_item(pinfo(@player, 13), null, array(type: 329))
 		die()
 	}
 	if(has_permission(@player, 'donator.vip')) {
@@ -77,6 +78,7 @@ proc(_give_startitem, @player,
 		set_inventory_item(pinfo(@player, 13), 37, array(type: 304))
 		set_inventory_item(pinfo(@player, 13), 36, array(type: 309))
 		set_inventory_item(pinfo(@player, 13), null, array(type: 283))
+		set_inventory_item(pinfo(@player, 13), null, array(type: 329))
 		die()
 	}
 		set_inventory_item(pinfo(@player, 13), 39, array(type: 302))
@@ -84,6 +86,7 @@ proc(_give_startitem, @player,
 		set_inventory_item(pinfo(@player, 13), 37, array(type: 304))
 		set_inventory_item(pinfo(@player, 13), 36, array(type: 305))
 		set_inventory_item(pinfo(@player, 13), null, array(type: 268))
+		set_inventory_item(pinfo(@player, 13), null, array(type: 329))
 	)
 
 ################################################
@@ -109,6 +112,7 @@ proc(_startgame,
 			foreach(@parray, @name) {
 				@i++
 				export('info.'.@name, @i)
+				_give_startitem(@name)
 				}
 				export('nextnumber', @i)
 			foreach(@parray, @name) {
@@ -125,9 +129,9 @@ proc(_startgame,
 ###   and the player, at start of race
 ################################################
 proc(_setposstart, @player, @number,
-@cords = _startcord(@number)
 @horses = get_value('horse.list')
 @horse = array_get(@horses, subtract(@number, '1'))
+tame_mob(@player, @horse)
 set_entity_rider(@horse, pinfo(@player, 13))
 )
 ################################################
@@ -138,7 +142,10 @@ set_entity_rider(@horse, pinfo(@player, 13))
 proc(_setpos, @player, @number, @location,
 @horses = get_value('horse.list')
 @horse = array_get(@horses, subtract(@number, '1'))
+set_entity_loc(@horse, @location)
+set_timeout(2000, closure(
 set_entity_rider(@horse, pinfo(@player, 13))
+))
 )
 
 ################################################
@@ -191,7 +198,7 @@ _endresetarray()
 _endresetpers()
 set_timeout(10000, closure(
 _startgame()
-_teleporthorse()
+_setrace
 ))
 )
 
@@ -212,13 +219,17 @@ export('info.'@name, '')
 ###   there start place
 ################################################
 proc(_teleporthorse,
-@horses = get_value('horse.list')
-@num = '1'
-foreach(@horses, @id) {
-@cords = _startcord(@num)
-set_entity_loc(@id, @cords)
-@num++
-}
+	@horses = get_value('horse.list')
+	@num = '1'
+	@time = '1000'
+		foreach(@horses, @id) {
+			@cords = _startcord(@num)
+				set_timeout(@time, closure(
+					set_entity_loc(@id, @cords)
+				))
+			@num++
+			@time = add(@time, '1000')
+		}
 )
 ################################################
 ###_teleportallspawn() 
@@ -238,26 +249,52 @@ if(ponline(@name)) {
 				}
 				}
 	)
-	
+################################################
+###_killall() 
+###   Procedure that kill all horses  
+###   
+################################################
+proc(_killall,
+	@allentities = all_entities()
+		foreach(@allentities, @id) {
+			if(entity_type(@id) == 'HORSE') {
+			set_entity_health(@id, '0')
+			}
+		}
+	)
+################################################
+###_createidarray() 
+###   Procedure that set horses id 
+###   and teleport them
+################################################
+proc(_createidarray,
+@allentities = all_entities()
+			@horses = array()
+				foreach(@allentities, @id) {
+					if(entity_type(@id) == 'HORSE') {
+					array_push(@horses, @id)
+					}
+				}
+			store_value('horse.list', @horses)
+			)
+
 ################################################
 ###_setrace() 
 ###   Procedure that set horses id 
 ###   and teleport them
 ################################################
 proc(_setrace,
-	sudo('/killall')
-	@allentities = all_entities()
-	@horses = array()
-		foreach(@allentities, @id) {
-			if(entity_type(@id) != 'PLAYER') {
-				array_push(@horses, @id)
-			}
-		}
-	store_value('horse.list', @horses)
-	_teleporthorse()
-		foreach(@horses, @id) {
-		set_mob_equipment(@id, array(CHESTPLATE: array(type: 329)))
-		set_entity_persistence(@id, 'true')
-		}
+	_killall()
+		set_timeout(3000, closure(
+			spawn_mob('HORSE', '10', import('ident.gmr.horse1'))
+			spawn_mob('HORSE', '10', import('ident.gmr.horse2'))
+		))
+		set_timeout(15000, closure(
+			_createidarray()
+				set_timeout(5000, closure(
+					_createidarray()
+					_teleporthorse()
+				))
+		))
 )
 

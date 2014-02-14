@@ -61,12 +61,12 @@ bind(player_spawn, null, null, @playerspawnevent,
 			_emptyinv(@player)
 			die()
 		} 
-	broadcast(@respawnname)
-	broadcast(import('info.'.@respawnname))
 	@pnum = import('info.'.@respawnname)
-	broadcast(@pnum)
 	@location = import('player.'.@pnum)
-	broadcast(@location)
+		if(@location == null) {
+			@cords = _startcord(@pnum)
+			modify_event('location', @cords)
+		}
 	modify_event('location', @location)
 	_setpos(@respawnname, @pnum, @location)
 )
@@ -141,7 +141,12 @@ bind(player_interact, null, null, @invclick,
 					msg(color(3).'NEW CHECK POINT SET!!')
 					@number = import('info.'.@player)
 					array_normalize(@blocation)
-					@blocation = array(array_get(@blocation, 0), array_get(@blocation, 1), array_get(@blocation, 2))
+					@x = array_get(@blocation, 0)
+					@y = array_get(@blocation, 1)
+					@z = array_get(@blocation, 2)
+					@x = add(@x, '1')
+					@z = add(@z, '1')
+					@blocation = array(@x, @y, @z)
 					export('player.'.@number, @blocation)
 				}
 				if(@leftclick == 'right_click_block' && @block == '19') {

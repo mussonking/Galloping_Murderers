@@ -60,3 +60,29 @@ guest:/gmr [$gmrchoice=''] = >>>
 						}
 					}
 		}
+		<<<
+	guest:/ride [$id=''] = >>>
+	set_entity_rider($id, pinfo(player(), 13))
+	<<<
+		guest:/tame [$id=''] = >>>
+	tame_mob(player(), $id)
+	<<<
+			guest:/type [$id=''] = >>>
+			set_mob_equipment($id, array(WEAPON: array(type: 329)))
+			set_mob_equipment($id, array(HELMET: array(type: 329)))
+	broadcast(entity_type($id))
+	<<<
+			guest:/rx [$id=''] = >>>
+		@array = array(world: world, x:180, y:67, z:5)
+		broadcast(@array)
+		@value = array_get(@array, z:)
+				broadcast(@value)
+		@value = add(@value, '2')
+				broadcast(@value)
+		array_set(@array, z:, @value)
+	broadcast(@array)
+	<<<	
+	
+	
+
+	
