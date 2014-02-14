@@ -70,11 +70,11 @@ guest:/gmr [$gmrchoice=''] = >>>
 		<<<
 
 guest:/tame = >>>
+	@player = player()
 	@parray = import('player.list')
 		if(!array_contains(@parray, @player)) {
 			die(color(4).'Error: You need to be ingame to use this command')
 		}
-	@player = player()
 	@number = import('info.'.@player)
 	@horses = get_value('horse.list')
 	@horse = array_get(@horses, subtract(@number, '1'))
