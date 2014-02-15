@@ -82,7 +82,7 @@ guest:/tame = >>>
 			die(color(4).'Your horse is already Tamed!')
 		}
 	msg(color(2)'Your horse is now tamed!')
-	tame_mob(player(), @horse)
+	tame_mob(@player, @horse)
 <<<
 
 	

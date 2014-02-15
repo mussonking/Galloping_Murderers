@@ -159,6 +159,7 @@ tmsg(@player, color(4).'ATTENTION'color(5)'Type:'.color(4)'/tame'.color(5)'To ta
 proc(_setpos, @player, @number, @location,
 @horses = get_value('horse.list')
 @horse = array_get(@horses, subtract(@number, '1'))
+@horse = entity_id(@horse)
 set_entity_loc(@horse, @location)
 set_timeout(2000, closure(
 set_entity_rider(@horse, pinfo(@player, 13))
@@ -185,6 +186,7 @@ proc(_remove_player, @removename,
 			export('info.'.@removename, '')
 			@horses = get_value('horse.list')
 			@id = array_get(@horses, subtract(@freenum, '1'))
+			@id = entity_id(@id)
 			@cords = _startcord(@freenum)
 				set_timeout(2000, closure(
 					set_entity_loc(@id, @cords)
@@ -243,6 +245,7 @@ proc(_teleporthorse,
 	@num = '1'
 	@time = '1000'
 		foreach(@horses, @id) {
+		@id = entity_id(@id)
 			@cords = _startcord(@num)
 				set_timeout(@time, closure(
 					set_entity_loc(@id, @cords)
@@ -292,6 +295,7 @@ proc(_createidarray,
 			@horses = array()
 				foreach(@allentities, @id) {
 					if(entity_type(@id) == 'HORSE') {
+					@id = entity_uuid(@id)
 					array_push(@horses, @id)
 					}
 				}
