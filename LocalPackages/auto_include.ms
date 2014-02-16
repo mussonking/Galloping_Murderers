@@ -6,6 +6,7 @@
 proc(_resetarrays,
 	export('player.list', array())
 	export('pfarray.list', array())
+	export('loadhorsearray', '')
     export('winner.number', '0')
     export('status.join', 'on')
 	export('button.locked', array())
@@ -20,6 +21,7 @@ proc(_resetarrays,
 	export('pressure.plate.finish', array(array('-23.0', '67.0', '9.0'), array('-20.0', '67.0', '9.0'), array('-17.0', '67.0', '9.0'), array('-23.0', '67.0', '9.0')))
 )
 proc(_endresetarray,
+	export('loadhorsearray', '')
 	export('player.list', array())
 	export('pfarray.list', array())
 	export('status.join', 'on')

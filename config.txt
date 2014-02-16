@@ -62,7 +62,7 @@ guest:/gmr [$gmrchoice=''] = >>>
 				set_ploc(@player, import('ident.gmr.spawn'))
 					if(@joinstatus == 'ingame') {
 						if(array_size(@parray) == 0) {
-							_endrace()
+							_endrace('none')
 							die()
 						}
 					}
@@ -84,6 +84,10 @@ guest:/tame = >>>
 		}
 	msg(color(2)'Your horse is now tamed!')
 	tame_mob(@player, @horse)
+<<<
+
+guest:/testt = >>>
+_give_startitem(player())
 <<<
 
 	

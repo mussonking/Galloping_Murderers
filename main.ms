@@ -24,7 +24,7 @@ bind(player_quit, null, null, @event,
 		die()
 		}
 	if(array_size(@playerlist) == 1) {
-		_endrace()
+		_endrace('none')
 		die()
 		}
 	if(array_contains(@playerlist, @quitname)) {
@@ -67,6 +67,7 @@ bind(player_spawn, null, null, @playerspawnevent,
 			@cords = _startcord(@pnum)
 			modify_event('location', @cords)
 			_setpos(@respawnname, @pnum, @cords)
+			tmsg(@respawnname, color(2).'You did not use checkpoints! Press the wooden button for checkpoints')
 			die()
 		}
 	modify_event('location', @location)
@@ -172,7 +173,7 @@ bind(player_interact, null, null, @invclick,
 										}
 									if(array_size(@plist) < 21) {
 										export('winner.number', '0')
-										_endrace()
+										_endrace(@player)
 										
 									}
 								}
@@ -187,8 +188,11 @@ bind(player_interact, null, null, @invclick,
 									}
 									if(array_size(@plist) < 16) {
 										export('winner.number', '0')
-										_endrace()
+										_endrace(@player)
 									}
+									if(array_size(@plist) >= 16) {
+											broadcast(color(5).'Who is going to finish'color(4)'5th'.color(5).'?')
+										}
 								}
 							if(@winnum == '2') {
 								export('winner.number', '3')
@@ -201,8 +205,11 @@ bind(player_interact, null, null, @invclick,
 									}
 									if(array_size(@plist) < 11) {
 										export('winner.number', '0')
-										_endrace()
+										_endrace(@player)
 									}
+									if(array_size(@plist) >= 11) {
+											broadcast(color(5).'Who is going to finish'color(4)'4th'.color(5).'?')
+										}
 							}
 						if(@winnum == '1') {
 								export('winner.number', '2')
@@ -215,8 +222,11 @@ bind(player_interact, null, null, @invclick,
 									}
 									if(array_size(@plist) < 6) {
 										export('winner.number', '0')
-										_endrace()
+										_endrace(@player)
 									}
+									if(array_size(@plist) >= 6) {
+											broadcast(color(5).'Who is going to finish'color(4)'3rd'.color(5).'?')
+										}
 						}
 						if(@winnum == '0') {
 							export('winner.number', '1')
@@ -228,7 +238,10 @@ bind(player_interact, null, null, @invclick,
 								}
 								if(array_size(@plist) < 4) {
 									export('winner.number', '0')
-										_endrace()
+										_endrace(@player)
+								}
+								if(array_size(@plist) >= 4) {
+									broadcast(color(5).'Who is going to finish'color(4)'2nd'.color(5).'?')
 								}
 						}
 

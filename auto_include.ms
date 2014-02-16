@@ -27,7 +27,7 @@ proc(_emptyinv, @player,
 ################################################
 proc(_addtolist, @player,
 	if(import('loadhorsearray') != 'done') {
-		_setrace()
+		_createidarray()
 		export('loadhorsearray', 'done')
 	}
 		@playerarray = import('player.list')
@@ -52,7 +52,9 @@ proc(_addtogame, @player, @number
 		@player = import('temp.addtogame.player')
 		@number = import('temp.addtogame.number')
 	}
-		_give_startitem(@player)
+				if(ponline) {
+				_give_startitem(@player)
+				}
 		_setposstart(@player, @number)
 		export('info.'.@player, @number)
 		@playerarray = import('player.list')
@@ -71,32 +73,31 @@ proc(_addtogame, @player, @number
 ################################################
 proc(_give_startitem, @player,
 	if(has_permission(@player, 'donator.vip+')) {
-		set_inventory_item(pinfo(@player, 13), 39, array(type: 306))
-		set_inventory_item(pinfo(@player, 13), 38, array(type: 307))
-		set_inventory_item(pinfo(@player, 13), 37, array(type: 308))
-		set_inventory_item(pinfo(@player, 13), 36, array(type: 309))
-		set_inventory_item(pinfo(@player, 13), 2, array(type: 272))
-		set_inventory_item(pinfo(@player, 13), 1, array(type: 329))
-		set_inventory_item(pinfo(@player, 13), 3, array(type: 364, qty: 10))
+		set_inventory_item(pinfo(@player, 13), 8, array(type: 306))
+		set_inventory_item(pinfo(@player, 13), 7, array(type: 307))
+		set_inventory_item(pinfo(@player, 13), 6, array(type: 308))
+		set_inventory_item(pinfo(@player, 13), 5, array(type: 309))
+		set_inventory_item(pinfo(@player, 13), 4, array(type: 272))
+		set_inventory_item(pinfo(@player, 13), 3, array(type: 329))
+		set_inventory_item(pinfo(@player, 13), 2, array(type: 364, qty: 10))
 	}
 	if(has_permission(@player, 'donator.vip') && !has_permission(@player, 'donator.vip+')) {
-		set_inventory_item(pinfo(@player, 13), 39, array(type: 306))
-		set_inventory_item(pinfo(@player, 13), 38, array(type: 303))
-		set_inventory_item(pinfo(@player, 13), 37, array(type: 304))
-		set_inventory_item(pinfo(@player, 13), 36, array(type: 309))
-		set_inventory_item(pinfo(@player, 13), 2, array(type: 283))
-		set_inventory_item(pinfo(@player, 13), 1, array(type: 329))
-		set_inventory_item(pinfo(@player, 13), 3, array(type: 364, qty: 10))
+		set_inventory_item(pinfo(@player, 13), 8, array(type: 306))
+		set_inventory_item(pinfo(@player, 13), 7, array(type: 303))
+		set_inventory_item(pinfo(@player, 13), 6, array(type: 304))
+		set_inventory_item(pinfo(@player, 13), 5, array(type: 309))
+		set_inventory_item(pinfo(@player, 13), 4, array(type: 283))
+		set_inventory_item(pinfo(@player, 13), 3, array(type: 329))
+		set_inventory_item(pinfo(@player, 13), 2, array(type: 364, qty: 10))
 	}
 	if(!has_permission(@player, 'donator.vip') && !has_permission(@player, 'donator.vip+')) {
-		set_inventory_item(pinfo(@player, 13), 39, array(type: 302))
-		set_inventory_item(pinfo(@player, 13), 38, array(type: 303))
-		set_inventory_item(pinfo(@player, 13), 37, array(type: 304))
-		set_inventory_item(pinfo(@player, 13), 36, array(type: 305))
-		set_inventory_item(pinfo(@player, 13), 2, array(type: 268))
-		set_inventory_item(pinfo(@player, 13), 1, array(type: 329))
-		set_inventory_item(pinfo(@player, 13), 3, array(type: 364, qty: 10))
-		
+		set_inventory_item(pinfo(@player, 13), 8, array(type: 302))
+		set_inventory_item(pinfo(@player, 13), 7, array(type: 303))
+		set_inventory_item(pinfo(@player, 13), 6, array(type: 304))
+		set_inventory_item(pinfo(@player, 13), 5, array(type: 305))
+		set_inventory_item(pinfo(@player, 13), 4, array(type: 268))
+		set_inventory_item(pinfo(@player, 13), 3, array(type: 329))
+		set_inventory_item(pinfo(@player, 13), 2, array(type: 364, qty: 10))
 		}
 	)
 
@@ -108,11 +109,10 @@ proc(_give_startitem, @player,
 
 proc(_startgame,
 	broadcast(color(6).'Game Starting in 1 minutes, type'color(4).'/gmr join'.color(6).', if not already done, To join the next Race!')
-	set_timeout(30000, closure(
-		_remindjoin()
+	@starttimer = set_timeout(30000, closure(  #time for countdown(adjust second timeout too!)
+	_remindjoin()
 		broadcast(color(6).'Game Starting in 30 seconds, type'color(4).'/gmr join'.color(6).', if not already done, To join the next Race!')
-		) )
-	set_timeout(60000, closure(  #time for countdown(adjust second timeout too!)
+	set_timeout(30000, closure(
 		_createidarray()
 		@parray = import('player.list') ###import all player waiting to start next game.
 		if(array_size(@parray) < 2) { #minimum number of players to start a game
@@ -120,18 +120,25 @@ proc(_startgame,
 			_startgame()
 			die()
 			}
+					@timer = set_timeout(600000, closure(
+								_endrace('timer')
+							))
+						export('end.timer', @timer)
+			export('status.join', 'ingame')
 			@i = 0
 			foreach(@parray, @name) {
 				@i++
 				export('info.'.@name, @i)
+				if(ponline) {
 				_give_startitem(@name)
+				}
 				}
 				export('nextnumber', add(@i, '1'))
 			foreach(@parray, @name) {
 			@num = import('info.'.@name)
 			_setposstart(@name, @num)
 				}
-			export('status.join', 'ingame')
+				))
 				))
 				)
 				
@@ -162,7 +169,7 @@ proc(_setpos, @player, @number, @location,
 @horse = array_get(@horses, subtract(@number, '1'))
 @horse = entity_id(@horse)
 set_entity_loc(@horse, @location)
-set_timeout(2000, closure(
+set_timeout(6000, closure(
 set_entity_rider(@horse, pinfo(@player, 13))
 ))
 )
@@ -195,22 +202,22 @@ proc(_remove_player, @removename,
 		@winnum = import('winner.number')
 			if(@winnum == '1') {
 				if(@playerlist < 6) {
-					_endrace()
+					_endrace('quickend')
 				}
 			}
 			if(@winnum == '2') {
 				if(@playerlist < 11) {
-					_endrace()
+					_endrace('quickend')
 				}
 			}
 			if(@winnum == '3') {
 				if(@playerlist < 16) {
-					_endrace()
+					_endrace('quickend')
 				}
 			}
 			if(@winnum == '4') {
 				if(@playerlist < 21) {
-					_endrace()
+					_endrace('quickend')
 				}
 			}
 		}
@@ -236,14 +243,28 @@ proc(_remindjoin,
 ###   Procedure that end the race 
 ###
 ################################################
-proc(_endrace,
-_teleportallspawn()
-_endresetarray()
-_endresetpers()
-set_timeout(10000, closure(
-_startgame()
-_setrace
-))
+proc(_endrace, @reason,
+	set_timeout(5000, closure(
+	_setrace()
+	))
+	if(@reason == 'none') {
+		broadcast(color(4).'No one Won the race. Map is reseting.')
+	}
+	if(@reason == 'quickend') {
+		@winnum = import('winner.number')
+		broadcast(color(4).'Someone left! Not enough player left to Declare a'@winnum'(nd/rd/th) place')
+		}
+	if(@reason == 'timer') {
+		broadcast(color(4).'No one one the race. Timer run out. Map is reseting.')
+	}
+	@timer = import('end.timer')
+	clear_task(@timer)
+	_teleportallspawn()
+	_endresetarray()
+	_endresetpers()
+		set_timeout(45000, closure(
+			_startgame()
+		))
 )
 
 ################################################
@@ -252,10 +273,14 @@ _setrace
 ### at end of races
 ################################################
 proc(_endresetpers,
-@pflist = import('pfarray.list')
-foreach(@pflist, @name) {
-export('info.'@name, '')
-}
+	@pflist = import('pfarray.list')
+		foreach(@pflist, @name) {
+			export('info.'@name, '')
+		}
+		@i = 0
+		for(@i, @i < 21, @i++,
+     export('player.'.@i, '')
+	 )
 )
 ################################################
 ###_teleporthorse() 
@@ -265,7 +290,7 @@ export('info.'@name, '')
 proc(_teleporthorse,
 	@horses = get_value('horse.list')
 	@num = '1'
-	@time = '1000'
+	@time = '500'
 		foreach(@horses, @id) {
 		@id = entity_id(@id)
 			@cords = _startcord(@num)
@@ -273,7 +298,7 @@ proc(_teleporthorse,
 					set_entity_loc(@id, @cords)
 				))
 			@num++
-			@time = add(@time, '1000')
+			@time = add(@time, '600')
 		}
 )
 ################################################
@@ -332,13 +357,15 @@ proc(_createidarray,
 proc(_setrace,
 	export('win.list', array())
 	_killall()
-		set_timeout(3000, closure(
+		set_timeout(2000, closure(
 			spawn_mob('HORSE', '10', import('ident.gmr.horse1'))
+		))
+		set_timeout(3500, closure(
 			spawn_mob('HORSE', '10', import('ident.gmr.horse2'))
 		))
-		set_timeout(15000, closure(
+		set_timeout(10000, closure(
 			_createidarray()
-				set_timeout(5000, closure(
+				set_timeout(10000, closure(
 					_createidarray()
 					_teleporthorse()
 				))
