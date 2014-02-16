@@ -84,11 +84,9 @@ guest:/tame = >>>
 		}
 	msg(color(2)'Your horse is now tamed!')
 	tame_mob(@player, @horse)
+	set_entity_rider(@horse, pinfo(@player, 13))
 <<<
 
-guest:/testt = >>>
-_give_startitem(player())
-<<<
 
 	
 	

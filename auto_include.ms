@@ -73,13 +73,13 @@ proc(_addtogame, @player, @number
 ################################################
 proc(_give_startitem, @player,
 	if(has_permission(@player, 'donator.vip+')) {
-		set_inventory_item(pinfo(@player, 13), 8, array(type: 306))
-		set_inventory_item(pinfo(@player, 13), 7, array(type: 307))
-		set_inventory_item(pinfo(@player, 13), 6, array(type: 308))
-		set_inventory_item(pinfo(@player, 13), 5, array(type: 309))
-		set_inventory_item(pinfo(@player, 13), 4, array(type: 272))
-		set_inventory_item(pinfo(@player, 13), 3, array(type: 329))
-		set_inventory_item(pinfo(@player, 13), 2, array(type: 364, qty: 10))
+		run('/give'@player'306 1')
+		run('/give'@player'307 1')
+		run('/give'@player'308 1')
+		run('/give'@player'309 1')
+		run('/give'@player'272 1')
+		run('/give'@player'329 1')
+		run('/give'@player'364 10')
 	}
 	if(has_permission(@player, 'donator.vip') && !has_permission(@player, 'donator.vip+')) {
 		set_inventory_item(pinfo(@player, 13), 8, array(type: 306))
@@ -108,6 +108,10 @@ proc(_give_startitem, @player,
 ################################################
 
 proc(_startgame,
+	@starttask = import('start.task')
+		if(@starttask == 'on') {
+			die()
+		}
 	broadcast(color(6).'Game Starting in 1 minutes, type'color(4).'/gmr join'.color(6).', if not already done, To join the next Race!')
 	@starttimer = set_timeout(30000, closure(  #time for countdown(adjust second timeout too!)
 	_remindjoin()
@@ -120,9 +124,13 @@ proc(_startgame,
 			_startgame()
 			die()
 			}
-					@timer = set_timeout(600000, closure(
-								_endrace('timer')
-							))
+			export('start.task', 'on')
+				@timer = set_timeout(600000, closure(
+							@status = import('status.join')
+								if(@status = 'on') {
+									_endrace('timer')
+								}
+						))
 						export('end.timer', @timer)
 			export('status.join', 'ingame')
 			@i = 0
@@ -157,7 +165,11 @@ proc(_setposstart, @player, @number,
 	}
 @cords = _startcord(@number)
 set_ploc(@player, @cords)
-tmsg(@player, color(4).'ATTENTION'color(5)'Type:'.color(4)'/tame'.color(5)'To tame your horse!')
+tmsg(@player, color(4).'=-=-=-=-=-=-=-=-=-=-=-'.color(d).'ATTENTION'.color(4).'=-=-=-=-=-=-=-=-=-=-=-')
+tmsg(@player, color(4).'=-=-=-=-=-=-=-=-=-=-=-'.color(d).'ATTENTION'.color(4).'=-=-=-=-=-=-=-=-=-=-=-')
+tmsg(@player, color(4).'ATTENTION'color(5)'Type:'.color(e)'/tame'.color(5)'To tame your horse!')
+tmsg(@player, color(4).'=-=-=-=-=-=-=-=-=-=-=-'.color(d).'ATTENTION'.color(4).'=-=-=-=-=-=-=-=-=-=-=-')
+tmsg(@player, color(4).'=-=-=-=-=-=-=-=-=-=-=-'.color(d).'ATTENTION'.color(4).'=-=-=-=-=-=-=-=-=-=-=-')
 )
 ################################################
 ### _setpos(@name, @number) 
@@ -201,22 +213,22 @@ proc(_remove_player, @removename,
 				))
 		@winnum = import('winner.number')
 			if(@winnum == '1') {
-				if(@playerlist < 6) {
+				if(array_size(@playerlist) < 6) {
 					_endrace('quickend')
 				}
 			}
 			if(@winnum == '2') {
-				if(@playerlist < 11) {
+				if(array_size(@playerlist) < 11) {
 					_endrace('quickend')
 				}
 			}
 			if(@winnum == '3') {
-				if(@playerlist < 16) {
+				if(array_size(@playerlist) < 16) {
 					_endrace('quickend')
 				}
 			}
 			if(@winnum == '4') {
-				if(@playerlist < 21) {
+				if(array_size(@playerlist) < 21) {
 					_endrace('quickend')
 				}
 			}
@@ -244,6 +256,7 @@ proc(_remindjoin,
 ###
 ################################################
 proc(_endrace, @reason,
+	export('start.task', '')
 	set_timeout(5000, closure(
 	_setrace()
 	))
@@ -252,7 +265,16 @@ proc(_endrace, @reason,
 	}
 	if(@reason == 'quickend') {
 		@winnum = import('winner.number')
-		broadcast(color(4).'Someone left! Not enough player left to Declare a'@winnum'(nd/rd/th) place')
+		@winnum = add(@winnum, '1')
+		@winnumab = 'th'
+			if(@winnum == '2') {
+				@winnnumab = "nd"
+			}
+			if(@winnum == '3') {
+				@winnnumab = "rd"
+			}
+			@winnum = @winnum.@winnumab
+		broadcast(color(4).'Someone left! Not enough player left to Declare a'@winnum'place')
 		}
 	if(@reason == 'timer') {
 		broadcast(color(4).'No one one the race. Timer run out. Map is reseting.')

@@ -22,11 +22,14 @@ bind(player_quit, null, null, @event,
 	###If the player is NOT ingame or on waitlist
 	if(!array_contains(@playerlist, @quitname)) {
 		die()
-		}
+	}
 	if(array_size(@playerlist) == 1) {
-		_endrace('none')
-		die()
-		}
+		@status = import('status.join')
+			if(@status = 'on') {
+				_endrace('none')
+				die()
+			}
+	}
 	if(array_contains(@playerlist, @quitname)) {
 		_remove_player(@quitname)
 		die()		
