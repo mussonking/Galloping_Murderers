@@ -154,22 +154,61 @@ bind(player_interact, null, null, @invclick,
 				if(@leftclick == 'right_click_block' && @block == '19') {
 					@winnum = import('winner.number')
 					@plist = import('player.list')
-						if(@winnum == '0') {
-							export('winner.number', '1')
-							broadcast(color(5).'Congratulation' color(4).@winname.color(5).'!!! You just won the 'color(4).'Galloping Murderers Race!')
-							export('winner.name.1', @player)
-								if(array_size(@plist) > 9) {
-									acc_add(@player, '30')
-								}
-								if(array_size(@plist) < 4) {
-									export('winner.number', '0')
+					@winlist = import('win.list')
+					if(array_contains(@winlist, @player)) {
+					die()
+					}
+					if(!array_contains(@plist, @player)){
+					die()
+					}
+							if(@winnum == '4') {
+								export('winner.number', '0')
+								broadcast(color(4).@player color(5).'Finished Fifth!!!')
+								array_push(@winlist, @player)
+								export('win.list', @winlist)
+								export('winner.name.5', @player)
+									if(array_size(@plist) > 9) {
+										acc_add(@player, '5')
+										}
+									if(array_size(@plist) < 21) {
+										export('winner.number', '0')
 										_endrace()
+										
+									}
 								}
-							die()
-						}
-							if(@winnum == '1') {
+							if(@winnum == '3') {
+								export('winner.number', '4')
+								broadcast(color(4).@player color(5).'Finished Fourth!!!')
+								array_push(@winlist, @player)
+								export('win.list', @winlist)
+								export('winner.name.4', @player)
+									if(array_size(@plist) > 9) {
+										acc_add(@player, '10')
+									}
+									if(array_size(@plist) < 16) {
+										export('winner.number', '0')
+										_endrace()
+									}
+								}
+							if(@winnum == '2') {
+								export('winner.number', '3')
+								broadcast(color(4).@player color(5).'Finished Third!!!')
+								array_push(@winlist, @player)
+								export('win.list', @winlist)
+								export('winner.name.3', @player)
+									if(array_size(@plist) > 9) {
+										acc_add(@player, '20')
+									}
+									if(array_size(@plist) < 11) {
+										export('winner.number', '0')
+										_endrace()
+									}
+							}
+						if(@winnum == '1') {
 								export('winner.number', '2')
-								broadcast(color(4).@winname color(5).'Finished second!!!')
+								broadcast(color(4).@player color(5).'Finished second!!!')
+								array_push(@winlist, @player)
+								export('win.list', @winlist)
 								export('winner.name.2', @player)
 									if(array_size(@plist) > 9) {
 										acc_add(@player, '25')
@@ -178,46 +217,21 @@ bind(player_interact, null, null, @invclick,
 										export('winner.number', '0')
 										_endrace()
 									}
-								die()
-							}
-								if(@winnum == '2') {
-									export('winner.number', '3')
-									broadcast(color(4).@winname color(5).'Finished Third!!!')
-									export('winner.name.3', @player)
-										if(array_size(@plist) > 9) {
-											acc_add(@player, '20')
-										}
-										if(array_size(@plist) < 11) {
-											export('winner.number', '0')
-											_endrace()
-										}
-									die()
+						}
+						if(@winnum == '0') {
+							export('winner.number', '1')
+							broadcast(color(5).'Congratulation' color(4).@player.color(5).'!!! You just won the 'color(4).'Galloping Murderers Race!')
+							array_push(@winlist, @player)
+							export('win.list', @winlist)
+								if(array_size(@plist) > 9) {
+									acc_add(@player, '30')
 								}
-								if(@winnum == '3') {
-									export('winner.number', '4')
-									broadcast(color(4).@winname color(5).'Finished Fourth!!!')
-									export('winner.name.4', @player)
-										if(array_size(@plist) > 9) {
-											acc_add(@player, '10')
-										}
-									if(array_size(@plist) < 16) {
-										export('winner.number', '0')
-										_endrace()
-									}
-								die()
-								}
-								if(@winnum == '5') {
+								if(array_size(@plist) < 4) {
 									export('winner.number', '0')
-									broadcast(color(4).@winname color(5).'Finished Fifth!!!')
-									export('winner.name.5', @player)
-										if(array_size(@plist) > 9) {
-											acc_add(@player, '5')
-											}
-									if(array_size(@plist) < 21) {
 										_endrace()
-									}
-								die()
 								}
+						}
+
 				}
 )
 

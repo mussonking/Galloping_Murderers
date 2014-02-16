@@ -113,6 +113,7 @@ proc(_startgame,
 		broadcast(color(6).'Game Starting in 30 seconds, type'color(4).'/gmr join'.color(6).', if not already done, To join the next Race!')
 		) )
 	set_timeout(60000, closure(  #time for countdown(adjust second timeout too!)
+		_createidarray()
 		@parray = import('player.list') ###import all player waiting to start next game.
 		if(array_size(@parray) < 2) { #minimum number of players to start a game
 		broadcast(color(4).'Need minimum 2 players to Start the Race.')
@@ -191,6 +192,27 @@ proc(_remove_player, @removename,
 				set_timeout(2000, closure(
 					set_entity_loc(@id, @cords)
 				))
+		@winnum = import('winner.number')
+			if(@winnum == '1') {
+				if(@playerlist < 6) {
+					_endrace()
+				}
+			}
+			if(@winnum == '2') {
+				if(@playerlist < 11) {
+					_endrace()
+				}
+			}
+			if(@winnum == '3') {
+				if(@playerlist < 16) {
+					_endrace()
+				}
+			}
+			if(@winnum == '4') {
+				if(@playerlist < 21) {
+					_endrace()
+				}
+			}
 		}
 	)
 
@@ -308,6 +330,7 @@ proc(_createidarray,
 ###   and teleport them
 ################################################
 proc(_setrace,
+	export('win.list', array())
 	_killall()
 		set_timeout(3000, closure(
 			spawn_mob('HORSE', '10', import('ident.gmr.horse1'))

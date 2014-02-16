@@ -78,6 +78,7 @@ guest:/tame = >>>
 	@number = import('info.'.@player)
 	@horses = get_value('horse.list')
 	@horse = array_get(@horses, subtract(@number, '1'))
+	@horse = entity_id(@horse)
 		if(get_mob_owner(@horse) == @player) {
 			die(color(4).'Your horse is already Tamed!')
 		}

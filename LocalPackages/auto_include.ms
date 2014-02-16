@@ -10,6 +10,7 @@ proc(_resetarrays,
     export('status.join', 'on')
 	export('button.locked', array())
 	export('player.locked', array())
+	export('win.list', array())
 	export('free.num', array())
 	export('ident.gmr.spawn', array('36', '109', '-105'))
 	export('ident.gmr.horse1', array(world: world, x:180, y:67, z:25)) 
