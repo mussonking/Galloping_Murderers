@@ -4,6 +4,7 @@
 ###   players and set timer to restart status
 ################################################
 proc(_resetarrays,
+	export('winner.number', '0')
 	export('player.list', array())
 	export('pfarray.list', array())
 	export('loadhorsearray', '')
@@ -21,6 +22,7 @@ proc(_resetarrays,
 	export('pressure.plate.finish', array(array('-23.0', '67.0', '9.0'), array('-20.0', '67.0', '9.0'), array('-17.0', '67.0', '9.0'), array('-23.0', '67.0', '9.0')))
 )
 proc(_endresetarray,
+	export('winner.number', '0')
 	export('loadhorsearray', '')
 	export('player.list', array())
 	export('pfarray.list', array())

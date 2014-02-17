@@ -25,7 +25,7 @@ bind(player_quit, null, null, @event,
 	}
 	if(array_size(@playerlist) == 1) {
 		@status = import('status.join')
-			if(@status = 'on') {
+			if(@status = 'ingame') {
 				_endrace('none')
 				die()
 			}
@@ -106,10 +106,14 @@ bind(player_interact, null, null, @invclick,
 				shoot_projectile(@player, 'SMALL_FIREBALL')
 				ptake_item(@player, '385', '1')
 			}
-				if(@slotitem == '377:0') {
-					shoot_projectile(@player, 'FIREBALL')
-					ptake_item(@player, '377', '1')
-				}
+			if(@slotitem == '377:0') {
+				shoot_projectile(@player, 'FIREBALL')
+				ptake_item(@player, '377', '1')
+			}
+			if(@slotitem == '144:1') {
+				shoot_projectile(@player, 'WITHER_SKULL')
+				ptake_item(@player, '144:1', '1')
+			}
 		}
 			if(@leftclick == 'right_click_block' && @block == '77:1' || @block == '77:2' || @block == '77:3' || @block == '77:4') {
 				@lockbutton = import('button.locked')
@@ -120,15 +124,19 @@ bind(player_interact, null, null, @invclick,
 					if(array_contains(@lockplayer, @player)) {
 						die(color(4).'YOU CANT!! --> You already got an item. 10 Seconds cooldown')
 					}
-	@itemarray = array('377', '385', '385', '385', '262', '262', '262', '262', '262', '262', '332', '332', '332', '332', '332', '332', '332', '332', '332')
+	@itemarray = array('144:1', '144:1', '144:1', '377', '377', '377', '377', '377', '385', '385', '385', '385', '262', '262', '262', '262', '262', '262', '262', '262')
 	@itemtogive = array_rand(@itemarray, 1, false)[0]
-		if(@itemtogive == '262' || @itemtogive == '332') {
+		if(@itemtogive == '262') {
 			pgive_item(@player, @itemtogive, 3)
 			msg(color(2).'You just received 3' data_name(@itemtogive))
 		}
 		if(@itemtogive == '377' || @itemtogive == '385') {
 			pgive_item(@player, @itemtogive, 1)
 			msg(color(2).'You just received a Fireball')
+		}
+		if(@itemtogive == '144:1') {
+			pgive_item(@player, @itemtogive, 1)
+			msg(color(2).'You just received a Whiter Skull')
 		}
 				array_push(@lockbutton, @blocation)
 				export('button.locked', @lockbutton)

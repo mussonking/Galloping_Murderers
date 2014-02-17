@@ -82,22 +82,22 @@ proc(_give_startitem, @player,
 		run('/give'@player'364 10')
 	}
 	if(has_permission(@player, 'donator.vip') && !has_permission(@player, 'donator.vip+')) {
-		set_inventory_item(pinfo(@player, 13), 8, array(type: 306))
-		set_inventory_item(pinfo(@player, 13), 7, array(type: 303))
-		set_inventory_item(pinfo(@player, 13), 6, array(type: 304))
-		set_inventory_item(pinfo(@player, 13), 5, array(type: 309))
-		set_inventory_item(pinfo(@player, 13), 4, array(type: 283))
-		set_inventory_item(pinfo(@player, 13), 3, array(type: 329))
-		set_inventory_item(pinfo(@player, 13), 2, array(type: 364, qty: 10))
+		run('/give'@player'306 1')
+		run('/give'@player'303 1')
+		run('/give'@player'304 1')
+		run('/give'@player'309 1')
+		run('/give'@player'283 1')
+		run('/give'@player'329 1')
+		run('/give'@player'364 10')
 	}
 	if(!has_permission(@player, 'donator.vip') && !has_permission(@player, 'donator.vip+')) {
-		set_inventory_item(pinfo(@player, 13), 8, array(type: 302))
-		set_inventory_item(pinfo(@player, 13), 7, array(type: 303))
-		set_inventory_item(pinfo(@player, 13), 6, array(type: 304))
-		set_inventory_item(pinfo(@player, 13), 5, array(type: 305))
-		set_inventory_item(pinfo(@player, 13), 4, array(type: 268))
-		set_inventory_item(pinfo(@player, 13), 3, array(type: 329))
-		set_inventory_item(pinfo(@player, 13), 2, array(type: 364, qty: 10))
+		run('/give'@player'302 1')
+		run('/give'@player'303 1')
+		run('/give'@player'304 1')
+		run('/give'@player'305 1')
+		run('/give'@player'268 1')
+		run('/give'@player'329 1')
+		run('/give'@player'364 10')
 		}
 	)
 
@@ -127,7 +127,7 @@ proc(_startgame,
 			export('start.task', 'on')
 				@timer = set_timeout(600000, closure(
 							@status = import('status.join')
-								if(@status = 'on') {
+								if(@status = 'ingame') {
 									_endrace('timer')
 								}
 						))
