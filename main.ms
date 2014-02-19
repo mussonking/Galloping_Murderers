@@ -25,7 +25,7 @@ bind(player_quit, null, null, @event,
 	}
 	if(array_size(@playerlist) == 1) {
 		@status = import('status.join')
-			if(@status = 'ingame') {
+			if(@status == 'ingame') {
 				_endrace('none')
 				die()
 			}
@@ -92,40 +92,42 @@ bind(entity_damage, null, null, @invhorse,
 ###  And checpoints & items button         ############
 #######################################################
 bind(player_interact, null, null, @invclick,
-	@player = @invclick['player']
-	@leftclick = @invclick['action']
-	@slotitem = @invclick['item']
-	@block = @invclick['block']
-	@blocation = pcursor()
-		if(@leftclick == 'left_click_block' || @leftclick == 'left_click_air') {
-			if(@slotitem == '262:0') {
-				shoot_projectile(@player, 'ARROW')
-				ptake_item(@player, '262', '1')
-			}
-			if(@slotitem == '385:0') {
-				shoot_projectile(@player, 'SMALL_FIREBALL')
-				ptake_item(@player, '385', '1')
-			}
-			if(@slotitem == '377:0') {
-				shoot_projectile(@player, 'FIREBALL')
-				ptake_item(@player, '377', '1')
-			}
-			if(@slotitem == '144:1') {
-				shoot_projectile(@player, 'WITHER_SKULL')
-				ptake_item(@player, '144:1', '1')
-			}
-		}
-			if(@leftclick == 'right_click_block' && @block == '77:1' || @block == '77:2' || @block == '77:3' || @block == '77:4') {
-				@lockbutton = import('button.locked')
-					if(array_contains(@lockbutton, @blocation)) {
-						die(color(4).'YOU CANT!! --> This button was already use. 5 Seconds cooldown')
+	@status = import('status.join')
+		if(@status = 'ingame') {							
+			@player = @invclick['player']
+			@leftclick = @invclick['action']
+			@slotitem = @invclick['item']
+			@block = @invclick['block']
+			@blocation = pcursor()
+				if(@leftclick == 'left_click_block' || @leftclick == 'left_click_air') {
+					if(@slotitem == '262:0') {
+						shoot_projectile(@player, 'ARROW')
+						ptake_item(@player, '262', '1')
 					}
-				@lockplayer = import('player.locked')
-					if(array_contains(@lockplayer, @player)) {
-						die(color(4).'YOU CANT!! --> You already got an item. 10 Seconds cooldown')
+					if(@slotitem == '385:0') {
+						shoot_projectile(@player, 'SMALL_FIREBALL')
+						ptake_item(@player, '385', '1')
 					}
-	@itemarray = array('144:1', '144:1', '144:1', '377', '377', '377', '377', '377', '385', '385', '385', '385', '262', '262', '262', '262', '262', '262', '262', '262')
-	@itemtogive = array_rand(@itemarray, 1, false)[0]
+					if(@slotitem == '377:0') {
+						shoot_projectile(@player, 'FIREBALL')
+						ptake_item(@player, '377', '1')
+					}
+					if(@slotitem == '144:1') {
+						shoot_projectile(@player, 'WITHER_SKULL')
+						ptake_item(@player, '144:1', '1')
+					}
+				}
+				if(@leftclick == 'right_click_block' && @block == '77:1' || @block == '77:2' || @block == '77:3' || @block == '77:4') {
+					@lockbutton = import('button.locked')
+						if(array_contains(@lockbutton, @blocation)) {
+							die(color(4).'YOU CANT!! --> This button was already use. 5 Seconds cooldown')
+						}
+					@lockplayer = import('player.locked')
+						if(array_contains(@lockplayer, @player)) {
+							die(color(4).'YOU CANT!! --> You already got an item. 10 Seconds cooldown')
+						}
+		@itemarray = array('144:1', '144:1', '144:1', '377', '377', '377', '377', '377', '385', '385', '385', '385', '262', '262', '262', '262', '262', '262', '262', '262')
+		@itemtogive = array_rand(@itemarray, 1, false)[0]
 		if(@itemtogive == '262') {
 			pgive_item(@player, @itemtogive, 3)
 			msg(color(2).'You just received 3' data_name(@itemtogive))
@@ -257,5 +259,6 @@ bind(player_interact, null, null, @invclick,
 						}
 
 				}
+	}
 )
 

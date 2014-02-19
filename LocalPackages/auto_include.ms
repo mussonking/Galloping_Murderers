@@ -43,79 +43,79 @@ if(@number == '1') {
 return(@array)
 }
 if(@number == '2') {
-@array = array('189', '67', '-9')
+@array = array('189', '67', '-5')
 return(@array)
 }
 if(@number == '3') {
-@array = array('189', '67', '-6')
+@array = array('189', '67', '2')
 return(@array)
 }
 if(@number == '4') {
-@array = array('189', '67', '-3')
+@array = array('189', '67', '8')
 return(@array)
 }
 if(@number == '5') {
-@array = array('189', '67', '0')
+@array = array('189', '67', '14')
 return(@array)
 }
 if(@number == '6') {
-@array = array('189', '67', '3')
+@array = array('189', '67', '20')
 return(@array)
 }
 if(@number == '7') {
-@array = array('189', '67', '6')
+@array = array('189', '67', '26')
 return(@array)
 }
 if(@number == '8') {
-@array = array('189', '67', '9')
+@array = array('189', '67', '32')
 return(@array)
 }
 if(@number == '9') {
-@array = array('189', '67', '12')
+@array = array('189', '67', '38')
 return(@array)
 }
 if(@number == '10') {
-@array = array('189', '67', '15')
+@array = array('189', '67', '44')
 return(@array)
 }
 if(@number == '11') {
-@array = array('189', '67', '18')
+@array = array('189', '73', '-12')
 return(@array)
 }
 if(@number == '12') {
-@array = array('189', '67', '21')
+@array = array('189', '73', '-5')
 return(@array)
 }
 if(@number == '13') {
-@array = array('189', '67', '24')
+@array = array('189', '73', '2')
 return(@array)
 }
 if(@number == '14') {
-@array = array('189', '67', '27')
+@array = array('189', '73', '8')
 return(@array)
 }
 if(@number == '15') {
-@array = array('189', '67', '30')
+@array = array('189', '73', '14')
 return(@array)
 }
 if(@number == '16') {
-@array = array('189', '67', '33')
+@array = array('189', '73', '20')
 return(@array)
 }
 if(@number == '17') {
-@array = array('189', '67', '36')
+@array = array('189', '73', '26')
 return(@array)
 }
 if(@number == '18') {
-@array = array('189', '67', '39')
+@array = array('189', '73', '32')
 return(@array)
 }
 if(@number == '19') {
-@array = array('189', '67', '42')
+@array = array('189', '73', '38')
 return(@array)
 }
 if(@number == '20') {
-@array = array('189', '67', '45')
+@array = array('189', '73', '44')
 return(@array)
 }
 )

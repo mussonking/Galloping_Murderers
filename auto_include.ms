@@ -108,10 +108,8 @@ proc(_give_startitem, @player,
 ################################################
 
 proc(_startgame,
-	@starttask = import('start.task')
-		if(@starttask == 'on') {
-			die()
-		}
+	@starttask = import('start.timer')
+	clear_task(@starttask)
 	broadcast(color(6).'Game Starting in 1 minutes, type'color(4).'/gmr join'.color(6).', if not already done, To join the next Race!')
 	@starttimer = set_timeout(30000, closure(  #time for countdown(adjust second timeout too!)
 	_remindjoin()
@@ -148,6 +146,7 @@ proc(_startgame,
 				}
 				))
 				))
+			export('start.timer', @starttimer)
 				)
 				
 ################################################
@@ -256,7 +255,7 @@ proc(_remindjoin,
 ###
 ################################################
 proc(_endrace, @reason,
-	export('start.task', '')
+	export('status.join', 'on')
 	set_timeout(5000, closure(
 	_setrace()
 	))
