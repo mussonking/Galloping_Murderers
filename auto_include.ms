@@ -49,8 +49,10 @@ proc(_addtolist, @player,
 ################################################
 proc(_addtogame, @player, @number
 	if(@number == '') {
-		@player = import('temp.addtogame.player')
 		@number = import('temp.addtogame.number')
+	}
+	if(@player == '') {
+		@player = import('temp.addtogame.player')
 	}
 				if(ponline) {
 				_give_startitem(@player)
@@ -73,31 +75,31 @@ proc(_addtogame, @player, @number
 ################################################
 proc(_give_startitem, @player,
 	if(has_permission(@player, 'donator.vip+')) {
-		run('/give'@player'306 1')
-		run('/give'@player'307 1')
-		run('/give'@player'308 1')
-		run('/give'@player'309 1')
-		run('/give'@player'272 1')
-		run('/give'@player'329 1')
-		run('/give'@player'364 10')
+		pgive_item(@player, 306, 1)
+		pgive_item(@player, 307, 1)
+		pgive_item(@player, 308, 1)
+		pgive_item(@player, 309, 1)
+		pgive_item(@player, 272, 1)
+		pgive_item(@player, 329, 1)
+		pgive_item(@player, 322, 20)
 	}
 	if(has_permission(@player, 'donator.vip') && !has_permission(@player, 'donator.vip+')) {
-		run('/give'@player'306 1')
-		run('/give'@player'303 1')
-		run('/give'@player'304 1')
-		run('/give'@player'309 1')
-		run('/give'@player'283 1')
-		run('/give'@player'329 1')
-		run('/give'@player'364 10')
+		pgive_item(@player, 306, 1)
+		pgive_item(@player, 303, 1)
+		pgive_item(@player, 304, 1)
+		pgive_item(@player, 309, 1)
+		pgive_item(@player, 283, 1)
+		pgive_item(@player, 329, 1)
+		pgive_item(@player, 322, 20)
 	}
 	if(!has_permission(@player, 'donator.vip') && !has_permission(@player, 'donator.vip+')) {
-		run('/give'@player'302 1')
-		run('/give'@player'303 1')
-		run('/give'@player'304 1')
-		run('/give'@player'305 1')
-		run('/give'@player'268 1')
-		run('/give'@player'329 1')
-		run('/give'@player'364 10')
+		pgive_item(@player, 302, 1)
+		pgive_item(@player, 303, 1)
+		pgive_item(@player, 304, 1)
+		pgive_item(@player, 305, 1)
+		pgive_item(@player, 268, 1)
+		pgive_item(@player, 329, 1)
+		pgive_item(@player, 322, 20)
 		}
 	)
 
@@ -123,7 +125,7 @@ proc(_startgame,
 			die()
 			}
 			export('start.task', 'on')
-				@timer = set_timeout(600000, closure(
+				@timer = set_timeout(900000, closure(
 							@status = import('status.join')
 								if(@status = 'ingame') {
 									_endrace('timer')
@@ -168,7 +170,7 @@ tmsg(@player, color(4).'=-=-=-=-=-=-=-=-=-=-=-'.color(d).'ATTENTION'.color(4).'=
 tmsg(@player, color(4).'=-=-=-=-=-=-=-=-=-=-=-'.color(d).'ATTENTION'.color(4).'=-=-=-=-=-=-=-=-=-=-=-')
 tmsg(@player, color(4).'ATTENTION'color(5)'Type:'.color(e)'/tame'.color(5)'To tame your horse!')
 tmsg(@player, color(4).'=-=-=-=-=-=-=-=-=-=-=-'.color(d).'ATTENTION'.color(4).'=-=-=-=-=-=-=-=-=-=-=-')
-tmsg(@player, color(4).'=-=-=-=-=-=-=-=-=-=-=-'.color(d).'ATTENTION'.color(4).'=-=-=-=-=-=-=-=-=-=-=-')
+tmsg(@player, color(4).'ATTENTION'color(5)'Type:'.color(e)'/tame'.color(5)'To tame your horse!')
 )
 ################################################
 ### _setpos(@name, @number) 

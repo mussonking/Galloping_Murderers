@@ -23,13 +23,13 @@ bind(player_quit, null, null, @event,
 	if(!array_contains(@playerlist, @quitname)) {
 		die()
 	}
-	if(array_size(@playerlist) == 1) {
-		@status = import('status.join')
-			if(@status == 'ingame') {
-				_endrace('none')
-				die()
-			}
-	}
+#	if(array_size(@playerlist) == 0) {
+#		@status = import('status.join')
+#			if(@status == 'ingame') {
+#				_endrace('none')
+#				die()
+#			}
+#	}
 	if(array_contains(@playerlist, @quitname)) {
 		_remove_player(@quitname)
 		die()		
@@ -70,8 +70,14 @@ bind(player_spawn, null, null, @playerspawnevent,
 			@cords = _startcord(@pnum)
 			modify_event('location', @cords)
 			_setpos(@respawnname, @pnum, @cords)
-			tmsg(@respawnname, color(2).'You did not use checkpoints! Press the wooden button for checkpoints')
 			die()
+			set_timeout(5000, closure(
+				tmsg(@player, color(4).'=-=-=-=-=-=-=-=-=-=-=-'.color(d).'ATTENTION'.color(4).'=-=-=-=-=-=-=-=-=-=-=-')
+				tmsg(@player, color(4).'=-=-=-=-=-=-=-=-=-=-=-'.color(d).'ATTENTION'.color(4).'=-=-=-=-=-=-=-=-=-=-=-')
+				tmsg(@player, color(4).'ATTENTION'color(5)'Do not Forget to hit'.color(e)'Wooden Button'.color(5)'For CheckPoints!')
+				tmsg(@player, color(4).'=-=-=-=-=-=-=-=-=-=-=-'.color(d).'ATTENTION'.color(4).'=-=-=-=-=-=-=-=-=-=-=-')
+				tmsg(@player, color(4).'ATTENTION'color(5)'Do not Forget to hit'.color(e)'Wooden Button'.color(5)'For CheckPoints!')
+				))
 		}
 	modify_event('location', @location)
 	_setpos(@respawnname, @pnum, @location)
